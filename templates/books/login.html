@@ -5,6 +5,21 @@
     <title>登录</title>
 </head>
 <body>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 <h1>登录</h1>
+<form method="post">
+  {% csrf_token %}
+  <label for="username">用户名:</label>
+  <input type="text" id="username" name="username">
+
+  <label for="password">密码:</label>
+  <input type="password" id="password" name="password">
+
+  <button type="submit">登录</button>
+</form>
 </body>
 </html>

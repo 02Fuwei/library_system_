@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
-import uuid
 from .models import UserProfile
+from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 
 # Create your views here.
@@ -23,5 +24,19 @@ def register(request):
     return render(request, 'books/register.html', {'user_form': user_form})
 
 
-def login(request):
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('books:home')
+        else:
+            messages.error(request, '用户名或密码不正确')
     return render(request, 'books/login.html')
+
+
+def home(request):
+    return render(request, 'books/home.html')

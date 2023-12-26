@@ -37,7 +37,7 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
             library_id = generate_library_id()
-            UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'],library_id=library_id)
+            UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'], library_id=library_id)
         return user
 
     def clean_username(self):
