@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
 from .models import UserProfile
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 
@@ -40,3 +40,24 @@ def login_view(request):
 
 def home(request):
     return render(request, 'books/home.html')
+
+
+def profile_view(request):
+    #  个人资料
+    user = request.user  # user属性，它表示当前用户的实例
+    profile = user.userprofile
+    context = {
+        'user': user,
+        'profile': profile
+    }
+    return render(request, 'books/profile.html', context)
+
+
+def logout_view(request):
+    #  登出
+    logout(request)
+    return redirect('books:login')
+
+
+def change_password(request):
+    return redirect('books:login')
