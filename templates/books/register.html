@@ -15,6 +15,7 @@
     {% endif %}
     <button type="submit">注册</button>
     {% csrf_token %}
+    <a href="{% url 'books:login' %}">登录</a>
 </form>
 </body>
 </html>
