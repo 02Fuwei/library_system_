@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
 from .models import UserProfile
@@ -42,13 +42,16 @@ def login_view(request):
 
 @login_required
 def home(request):
+    print('User ID', request.user.id)
+    print('Is authenticated', request.user.is_authenticated)
+    print('', request.user.userprofile.library_id)
     return render(request, 'books/home.html')
 
 
 @login_required
-def profile_view(request):
+def profile_view(request, user_id):
     #  个人资料
-    user = request.user  # user属性，它表示当前用户的实例
+    user = get_object_or_404(User, pk=user_id)
     profile = user.userprofile
     context = {
         'user': user,

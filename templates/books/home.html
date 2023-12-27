@@ -9,10 +9,13 @@
     <h1>欢迎来到图书馆信息管理系统</h1>
     <p>您好,{{ user.username }}!</p>
 
-    <a href="{% url 'books:profile' %}">个人资料</a>
+    <a href="{% url 'books:profile' user.id %}">个人资料</a>
 
     <a href="{% url 'books:change_password' %}">修改密码</a>
 
-    <a href="{% url 'books:logout_view' %}">登出</a>
+    <a href="{% url 'books:logout_view' %}">登出</a><br>
+
+    <a href="{% url 'books:user_management' %}">用户管理</a><br>
+
 </body>
 </html>
