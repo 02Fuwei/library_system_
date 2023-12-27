@@ -7,6 +7,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # 登录
     path('home/', views.home, name='home'),  # 主页
     path('logout/', views.logout_view, name='logout_view'),
-    path('profile', views.profile_view, name='profile'),
-    path('change_password', views.change_password, name='change_password')
+    path('profile/', views.profile_view, name='profile'),
+    path('change_password/', views.change_password, name='change_password')
 ]

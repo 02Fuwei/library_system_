@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
 from .models import UserProfile
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 # Create your views here.
@@ -38,10 +40,12 @@ def login_view(request):
     return render(request, 'books/login.html')
 
 
+@login_required
 def home(request):
     return render(request, 'books/home.html')
 
 
+@login_required
 def profile_view(request):
     #  个人资料
     user = request.user  # user属性，它表示当前用户的实例
@@ -59,5 +63,19 @@ def logout_view(request):
     return redirect('books:login')
 
 
+@login_required
 def change_password(request):
-    return redirect('books:login')
+    """
+    修改密码
+    """
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # 用于在用户更改密码后更新其会话，以防止用户被登出。
+            return redirect('books:home')
+        # else:
+        #     messages.error(request, '请修改以下错误')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'books/change_password.html', {'form': form})

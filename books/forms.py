@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import UserProfile
 import uuid
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 def generate_library_id():
@@ -45,3 +46,9 @@ class UserRegistrationForm(forms.ModelForm):
         if User.objects.filter(username=username).exists():
             raise ValidationError('用户已存在')
         return username
+
+
+class CustomPasswordChangeFrom(PasswordChangeForm):
+    old_password = forms.CharField(label='旧密码', widget=forms.PasswordInput)
+    new_password1 = forms.CharField(label='新密码', widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label='确认新密码', widget=forms.PasswordInput)
