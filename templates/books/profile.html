@@ -7,16 +7,16 @@
 <body>
     <h1>个人资料</h1>
     <p>用户名: {{ user.username }}</p>
-    <p>名字: {{ user.first_name }}</p>
-    <p>姓氏: {{ user.last_name }}</p>
-    <p>电子邮件: {{ user.email }}</p>
-    <p>账号创建时间: {{ user.date_joined }}</p>
-    <p>地址: {{ profile.address }}</p>
-    <p>电话号码: {{ profile.phone_number }}</p>
-    <p>会员类型: {{ profile.membership_type }}</p>
-    <p>会员到期日期: {{ profile.membership_expiry }}</p>
-    <p>借书限额: {{ profile.loan_limit }}</p>
-    <p>余额: {{ profile.fines }}</p>
+    <p>名字: {{ user.first_name|default:"-"  }}</p>
+    <p>姓氏: {{ user.last_name|default:"-"  }}</p>
+    <p>电子邮件: {{ user.email|default:"-"  }}</p>
+    <p>账号创建时间: {{ user.date_joined|default:"-"  }}</p>
+    <p>地址: {{ profile.address|default:"-"  }}</p>
+    <p>电话号码: {{ profile.phone_number|default:"-"  }}</p>
+    <p>会员类型: {{ profile.membership_type|default:"-"  }}</p>
+    <p>会员到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
+    <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
+    <p>余额: {{ profile.fines|default:"-"  }}</p>
     <a href="{% url 'books:home' %}">返回首页</a>
 </body>
 </html>
