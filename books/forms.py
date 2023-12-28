@@ -21,10 +21,15 @@ class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label='密码', widget=forms.PasswordInput)
     password2 = forms.CharField(label='确认密码', widget=forms.PasswordInput)
     phone_number = forms.CharField(label='手机号码', max_length=11)
+    USER_TYPE_CHOICES = {
+        (0, '用户'),
+        (1, '管理员'),
+    }
+    user_type = forms.ChoiceField(choices=USER_TYPE_CHOICES, label='用户类型')
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2')
+        fields = ('username', 'password', 'password2', 'user_type')
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -38,7 +43,9 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
             library_id = generate_library_id()
-            UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'], library_id=library_id)
+            user_type = self.cleaned_data['user_type']
+            UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'], library_id=library_id,
+                                       membership_type=user_type)
         return user
 
     def clean_username(self):

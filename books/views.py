@@ -45,6 +45,7 @@ def home(request):
     print('User ID', request.user.id)
     print('Is authenticated', request.user.is_authenticated)
     print('', request.user.userprofile.library_id)
+    print('', request.user.userprofile.membership_type)
     return render(request, 'books/home.html')
 
 
