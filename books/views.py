@@ -46,7 +46,9 @@ def home(request):
     print('Is authenticated', request.user.is_authenticated)
     print('', request.user.userprofile.library_id)
     print('', request.user.userprofile.membership_type)
-    return render(request, 'books/home.html')
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    return render(request, 'books/home.html',{'profile':profile})
 
 
 @login_required
