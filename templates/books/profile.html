@@ -10,11 +10,11 @@
     <p>名字: {{ user.first_name|default:"-"  }}</p>
     <p>姓氏: {{ user.last_name|default:"-"  }}</p>
     <p>电子邮件: {{ user.email|default:"-"  }}</p>
-    <p>账号创建时间: {{ user.date_joined|default:"-"  }}</p>
+    <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
     <p>地址: {{ profile.address|default:"-"  }}</p>
     <p>电话号码: {{ profile.phone_number|default:"-"  }}</p>
-    <p>会员类型: {{ profile.membership_type|default:"-"  }}</p>
-    <p>会员到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
+    <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
+    <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
     <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
     <p>余额: {{ profile.fines|default:"-"  }}</p>
     <a href="{% url 'books:home' %}">返回首页</a>
