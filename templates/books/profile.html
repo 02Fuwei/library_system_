@@ -6,17 +6,37 @@
 </head>
 <body>
     <h1>个人资料</h1>
+    <form method="post">
+    {% csrf_token %}
     <p>用户名: {{ user.username }}</p>
-    <p>名字: {{ user.first_name|default:"-"  }}</p>
-    <p>姓氏: {{ user.last_name|default:"-"  }}</p>
-    <p>电子邮件: {{ user.email|default:"-"  }}</p>
+        <div>
+        <label for="{{ form.first_name.id_for_label }}">名字:</label>
+        {{ form.first_name }}
+    </div>
+    <div>
+        <label for="{{ form.last_name.id_for_label }}">姓氏:</label>
+        {{ form.last_name }}
+
+    </div>
+    <div>
+        <label for="{{ form.email.id_for_label }}">电子邮件:</label>
+        {{ form.email }}
+    </div>
+    <div>
+        <label for="{{ form.address.id_for_label }}">地址:</label>
+        {{ form.address }}
+    </div>
+    <div>
+        <label for="{{ form.phone_number.id_for_label }}">电话号码:</label>
+        {{ form.phone_number }}
+    </div>
+        <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
     <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
-    <p>地址: {{ profile.address|default:"-"  }}</p>
-    <p>电话号码: {{ profile.phone_number|default:"-"  }}</p>
-    <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
     <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
     <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
     <p>余额: {{ profile.fines|default:"-"  }}</p>
+    <button type="submit">保存更改</button>
+</form>
     <a href="{% url 'books:home' %}">返回首页</a>
 </body>
 </html>

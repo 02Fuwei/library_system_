@@ -59,3 +59,14 @@ class CustomPasswordChangeFrom(PasswordChangeForm):
     old_password = forms.CharField(label='旧密码', widget=forms.PasswordInput)
     new_password1 = forms.CharField(label='新密码', widget=forms.PasswordInput)
     new_password2 = forms.CharField(label='确认新密码', widget=forms.PasswordInput)
+
+
+class UserProfileForm(forms.ModelForm):
+    # 用户资料表单
+    first_name = forms.CharField(max_length=30,label='名字')
+    last_name = forms.CharField(max_length=30,label='姓氏')
+    email = forms.EmailField()
+
+    class Meta:
+        model = UserProfile
+        fields = ['address', 'phone_number']

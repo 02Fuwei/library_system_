@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
@@ -7,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from .forms import UserProfileForm
 
 
 # Create your views here.
@@ -42,23 +44,46 @@ def login_view(request):
 
 @login_required
 def home(request):
-    print('User ID', request.user.id)
-    print('Is authenticated', request.user.is_authenticated)
-    print('', request.user.userprofile.library_id)
-    print('', request.user.userprofile.membership_type)
     user = request.user
     profile = UserProfile.objects.get(user=user)
-    return render(request, 'books/home.html',{'profile':profile})
+    return render(request, 'books/home.html', {'profile': profile})
 
 
 @login_required
+# def profile_view(request, user_id):
+#     #  个人资料
+#     user = get_object_or_404(User, pk=user_id)
+#     profile = user.userprofile
+#     context = {
+#         'user': user,
+#         'profile': profile
+#     }
+#     return render(request, 'books/profile.html', context)
 def profile_view(request, user_id):
-    #  个人资料
     user = get_object_or_404(User, pk=user_id)
     profile = user.userprofile
+    # 检查当前登录用户是否有权查看这个页面
+    if request.user != user and not profile.membership_type:
+        return HttpResponseForbidden("您没有权限查看这个页面")
+    if request.method == 'POST':
+        user_form = UserProfileForm(request.POST, instance=profile)
+        if user_form.is_valid():
+            user.first_name = user_form.cleaned_data['first_name']
+            user.last_name = user_form.cleaned_data['last_name']
+            user.email = user_form.cleaned_data['email']
+            user.save()
+            user_form.save()
+            return redirect('books:home')
+    else:
+        user_form = UserProfileForm(instance=profile, initial={
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email
+        })
     context = {
         'user': user,
-        'profile': profile
+        'profile': profile,
+        'form': user_form,
     }
     return render(request, 'books/profile.html', context)
 
