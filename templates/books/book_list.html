@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>图书列表</h1>
+    <a href="{% url 'books:add_book' %}">新增图书</a>
+    <table>
+        <tr>
+            <th>名称</th>
+            <th>作者</th>
+            <th>ISBN</th>
+            <th>出版日期</th>
+            <th>类别</th>
+            <th>库存数量</th>
+        </tr>
+        {% for book in page_obj %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author}}</td>
+            <td>{{ book.isbn  }}</td>
+            <td>{{ book.publication_date  }}</td>
+            <td>{{ book.category  }}</td>
+            <td>{{ book.in_stock  }}</td>
+        </tr>
+		{% empty %}
+		<li>没有可用的图书。</li>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; 第一页</a>
+                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+        <a href="{% url 'books:home' %}">返回首页</a>
+</body>
+</html>

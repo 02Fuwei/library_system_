@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, user_management_views
+from . import views, user_management_views,book_management_views
 
 app_name = 'books'
 urlpatterns = [
@@ -10,4 +10,6 @@ urlpatterns = [
     path('profile/<str:user_id>/', views.profile_view, name='profile'),
     path('change_password/', views.change_password, name='change_password'),
     path('user_management/', user_management_views.user_management, name='user_management'),
+    path('book_management/', book_management_views.book_list, name='book_list'),
+    path('add_book/', book_management_views.add_book, name='add_book'),
 ]

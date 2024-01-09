@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import UserProfile
+from .models import UserProfile, Book
 import uuid
 from django.contrib.auth.forms import PasswordChangeForm
 
@@ -63,10 +63,17 @@ class CustomPasswordChangeFrom(PasswordChangeForm):
 
 class UserProfileForm(forms.ModelForm):
     # 用户资料表单
-    first_name = forms.CharField(max_length=30,label='名字')
-    last_name = forms.CharField(max_length=30,label='姓氏')
+    first_name = forms.CharField(max_length=30, label='名字')
+    last_name = forms.CharField(max_length=30, label='姓氏')
     email = forms.EmailField()
 
     class Meta:
         model = UserProfile
         fields = ['address', 'phone_number']
+
+
+class BookForm(forms.ModelForm):
+    # 添加图书
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'isbn', 'publication_date', 'category', 'in_stock']

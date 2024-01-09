@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import timedelta
 from django.utils import timezone
 
+
 # Create your models here.
 
 
@@ -23,3 +24,14 @@ class UserProfile(models.Model):
     # Fines（罚款）: 用户当前的罚款总额，通常是由于逾期未还书籍产生。
     fines = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
+
+class Book(models.Model):
+    title = models.CharField(max_length=200, verbose_name='书名')
+    author = models.CharField(max_length=100, verbose_name='作者')
+    isbn = models.CharField(max_length=13, unique=True, verbose_name='ISBN')
+    publication_date = models.DateField(verbose_name='出版日期')
+    category = models.CharField(max_length=100, verbose_name='类别')
+    in_stock = models.IntegerField(default=0, verbose_name='库存数量')
+
+    def __str__(self):
+        return self.title
