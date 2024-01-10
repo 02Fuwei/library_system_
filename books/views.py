@@ -50,15 +50,6 @@ def home(request):
 
 
 @login_required
-# def profile_view(request, user_id):
-#     #  个人资料
-#     user = get_object_or_404(User, pk=user_id)
-#     profile = user.userprofile
-#     context = {
-#         'user': user,
-#         'profile': profile
-#     }
-#     return render(request, 'books/profile.html', context)
 def profile_view(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     profile = user.userprofile

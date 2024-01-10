@@ -7,6 +7,12 @@
 <body>
     <h1>图书列表</h1>
     <a href="{% url 'books:add_book' %}">新增图书</a>
+    <form method="get" action="{% url 'books:book_list' %}">
+        <label>
+            <input type="text" name="q" placeholder="搜索书名...">
+        </label>
+        <button type="submit">搜索</button>
+    </form>
     <table>
         <tr>
             <th>名称</th>
@@ -18,7 +24,7 @@
         </tr>
         {% for book in page_obj %}
         <tr>
-            <td>{{ book.title }}</td>
+            <td><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a>></td>
             <td>{{ book.author}}</td>
             <td>{{ book.isbn  }}</td>
             <td>{{ book.publication_date  }}</td>

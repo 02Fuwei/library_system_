@@ -12,4 +12,7 @@ urlpatterns = [
     path('user_management/', user_management_views.user_management, name='user_management'),
     path('book_management/', book_management_views.book_list, name='book_list'),
     path('add_book/', book_management_views.add_book, name='add_book'),
+    path('add_book/<int:book_id>/', book_management_views.book_detail, name='book_detail'),
+    path('add_book/<int:book_id>/edit', book_management_views.book_edit, name='book_edit'),
+    path('add_book/<int:book_id>/delete', book_management_views.book_delete, name='book_delete'),
 ]

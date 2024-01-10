@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ book.title }}</title>
+</head>
+<body>
+    <h1>{{ book.title }}</h1>
+    <a href="{% url 'books:book_edit' book.id %}">编辑</a>
+    <p>作者: {{ book.author }}</p>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>出版日期: {{ book.publication_date }}</p>
+    <p>类别: {{ book.category }}</p>
+    <p>库存数量: {{ book.in_stock }}</p>
+    <form action="{% url 'books:book_delete' book.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="删除图书">
+    </form>
+    <a href="{% url 'books:book_list' %}">返回</a>
+</body>
+</html>
