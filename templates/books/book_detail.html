@@ -7,6 +7,19 @@
 <body>
     <h1>{{ book.title }}</h1>
     <a href="{% url 'books:book_edit' book.id %}">编辑</a>
+    <form action="{% url 'books:borrow_book' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">借书</button>
+    </form>
+    {% if messages %}
+        <div>{{ messages }}</div>
+    {% endif %}
+    {% if loan %}
+        <form action="{% url 'books:return_book' loan.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">还书</button>
+        </form>
+    {% endif %}
     <p>作者: {{ book.author }}</p>
     <p>ISBN: {{ book.isbn }}</p>
     <p>出版日期: {{ book.publication_date }}</p>

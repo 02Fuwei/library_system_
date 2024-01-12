@@ -2,12 +2,13 @@
 图书管理
 """
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Book, UserProfile
+from .models import Book, UserProfile, Loan
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from .forms import BookForm
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from django.utils import timezone
 
 
 @login_required
@@ -66,3 +67,37 @@ def book_delete(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     book.delete()
     return redirect('books:book_list')
+
+
+def borrow_book(request, book_id):
+    # 借书
+    book = get_object_or_404(Book, pk=book_id)
+    user_profile = request.user.userprofile
+    if request.method == 'POST':
+        if book.in_stock > 0:
+            # 库存大于等于1
+            books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()
+            print("借书数量：===", books_borrowed_count)
+            if books_borrowed_count <= user_profile.loan_limit:
+                # 已借的数等于或超出限制数量
+                print('限额')
+                Loan.objects.create(book=book, user=request.user)  # 创建借书记录
+                book.in_stock -= 1  # 更新款存
+                print('request.method == POST')
+                book.save()
+                return render(request, 'books/book_detail.html', {'book': book, 'messages': '您已达到借书限额'})
+        else:
+            print('库存不足了')
+            return render(request, 'books/book_detail.html', {'book': book, 'messages': '该书库存不足'})
+    print('走到这里了')
+    return render(request, 'books/book_detail.html', {'book': book})
+
+
+def return_book(request, loan_id):
+    loan = get_object_or_404(Loan, pk=loan_id)
+    if request.method == 'POST':
+        loan.return_date = timezone.now().date()
+        loan.book.in_stock += 1
+        loan.save()
+        return redirect('books:book_list')
+    return render(request, 'books/book_detail.html', {'loan': loan})
