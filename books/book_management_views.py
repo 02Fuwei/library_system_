@@ -6,7 +6,7 @@ from .models import Book, UserProfile, Loan
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from .forms import BookForm
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.db.models import Q
 from django.utils import timezone
 
@@ -75,29 +75,38 @@ def borrow_book(request, book_id):
     user_profile = request.user.userprofile
     if request.method == 'POST':
         if book.in_stock > 0:
-            # 库存大于等于1
+            # 库存大于等于0
+            # 已借书总数
             books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()
-            print("借书数量：===", books_borrowed_count)
-            if books_borrowed_count <= user_profile.loan_limit:
-                # 已借的数等于或超出限制数量
-                print('限额')
-                Loan.objects.create(book=book, user=request.user)  # 创建借书记录
-                book.in_stock -= 1  # 更新款存
-                print('request.method == POST')
-                book.save()
+            if books_borrowed_count < user_profile.loan_limit:
+                # 借书总数<=限额
+                if not Loan.objects.filter(book_id=book_id, user=request.user, return_date__isnull=True).exists():
+                    # 该书未借
+                    Loan.objects.create(book=book, user=request.user)  # 创建借书记录
+                    book.in_stock -= 1  # 更新库存
+                    book.save()
+                    return render(request, 'books/book_detail.html', {'book': book, 'messages': '借书成功'})
+                else:
+                    return render(request, 'books/book_detail.html', {'book': book, 'messages': '该书已借'})
+            else:
+                # 借书总数>限额
                 return render(request, 'books/book_detail.html', {'book': book, 'messages': '您已达到借书限额'})
         else:
-            print('库存不足了')
             return render(request, 'books/book_detail.html', {'book': book, 'messages': '该书库存不足'})
-    print('走到这里了')
     return render(request, 'books/book_detail.html', {'book': book})
 
 
-def return_book(request, loan_id):
-    loan = get_object_or_404(Loan, pk=loan_id)
+def return_book(request, book_id):
+    # 还书
+    book = get_object_or_404(Book, pk=book_id)
+    try:
+        # 匹配book_id和user
+        loan = Loan.objects.get(book_id=book_id, user=request.user, return_date__isnull=True)
+    except Loan.DoesNotExist:
+        return render(request, 'books/book_detail.html', {'book': book, 'messages': '您未该借书或已还书'})
     if request.method == 'POST':
         loan.return_date = timezone.now().date()
-        loan.book.in_stock += 1
+        book.in_stock += 1
+        book.save()
         loan.save()
-        return redirect('books:book_list')
-    return render(request, 'books/book_detail.html', {'loan': loan})
+    return render(request, 'books/book_detail.html', {'book': book, 'messages': '还书成功'})

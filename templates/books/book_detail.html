@@ -14,12 +14,10 @@
     {% if messages %}
         <div>{{ messages }}</div>
     {% endif %}
-    {% if loan %}
-        <form action="{% url 'books:return_book' loan.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">还书</button>
-        </form>
-    {% endif %}
+    <form action="{% url 'books:return_book' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">还书</button>
+    </form>
     <p>作者: {{ book.author }}</p>
     <p>ISBN: {{ book.isbn }}</p>
     <p>出版日期: {{ book.publication_date }}</p>
