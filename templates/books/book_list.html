@@ -2,7 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>图书列表</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <h1>图书列表</h1>
@@ -24,15 +40,17 @@
         </tr>
         {% for book in page_obj %}
         <tr>
-            <td><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a>></td>
-            <td>{{ book.author}}</td>
-            <td>{{ book.isbn  }}</td>
-            <td>{{ book.publication_date  }}</td>
-            <td>{{ book.category  }}</td>
-            <td>{{ book.in_stock  }}</td>
+            <td><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.publication_date }}</td>
+            <td>{{ book.category }}</td>
+            <td>{{ book.in_stock }}</td>
         </tr>
-		{% empty %}
-		<li>没有可用的图书。</li>
+        {% empty %}
+        <tr>
+            <td colspan="6">没有可用的图书。</td>
+        </tr>
         {% endfor %}
     </table>
 
@@ -47,12 +65,13 @@
                 第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
             </span>
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+            {% if page_obj.has_next%}
+            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
             {% endif %}
         </span>
     </div>
-        <a href="{% url 'books:home' %}">返回首页</a>
+<a href="{% url 'books:home' %}">返回首页</a>
+
 </body>
 </html>

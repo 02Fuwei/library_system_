@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>借阅管理</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>借阅管理</h1>
+    <table>
+        <tr>
+            <th>书名</th>
+            <th>借阅者</th>
+            <th>借阅日期</th>
+            <th>归还日期</th>
+        </tr>
+        {% for loan in loans %}
+        <tr>
+            <td>{{ loan.book.title }}</td>
+            <td>{{ loan.user.username }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.return_date|default:"未归还" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">没有借阅记录。</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'books:home' %}">返回首页</a>
+</body>
+</html>

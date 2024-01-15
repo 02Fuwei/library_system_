@@ -13,6 +13,7 @@
         <a href="{% url 'books:profile' user.id %}">个人资料</a>
 
         <a href="{% url 'books:change_password' %}">修改密码</a>
+        <a href="{% url 'books:my_loans' %}">我的借阅</a>
 
         <a href="{% url 'books:logout_view' %}">登出</a><br>
 
@@ -20,6 +21,7 @@
     {% if profile.membership_type == 1 %}
         <a href="{% url 'books:user_management' %}">用户管理</a><br>
         <a href="{% url 'books:book_list' %}">图书管理</a><br>
+        <a href="{% url 'books:loans_management' %}">借阅管理</a><br>
 
     {% endif %}
     <!-- 其他内容 -->

@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>用户管理</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-        <h1>用户管理</h1>
+    <h1>用户管理</h1>
     <table>
         <tr>
             <th>用户名</th>
@@ -19,28 +35,32 @@
         </tr>
         {% for user in users %}
         <tr>
-            <td>{{ user.username|default:"-"  }}</td>
-            <td>{{ user.last_name|default:"-"  }}</td>
-            <td>{{ user.email|default:"-"  }}</td>
-            <td>{{ user.userprofile.phone_number|default:"-"  }}</td>
-            <td>{{ user.userprofile.membership_expiry|default:"-"  }}</td>
-            <td>{{ user.userprofile.fines|default:"-"  }}</td>
-            <td>{% if profile.is_active == 0 %}未激活{% else %}激活{% endif %}</td>
+            <td>{{ user.username|default:"-" }}</td>
+            <td>{{ user.last_name|default:"-" }}</td>
+            <td>{{ user.email|default:"-" }}</td>
+            <td>{{ user.userprofile.phone_number|default:"-" }}</td>
+            <td>{{ user.userprofile.membership_expiry|default:"-" }}</td>
+            <td>{{ user.userprofile.fines|default:"-" }}</td>
+            <td>{% if user.is_active %}激活{% else %}未激活{% endif %}</td>
             <td><a href="{% url 'books:profile' user.id %}">详情</a></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">没有用户记录。</td>
         </tr>
         {% endfor %}
     </table>
-        <div class="pagination">
+
+    <!-- 分页控件 -->
+    <div class="pagination">
         <span class="step-links">
             {% if users.has_previous %}
                 <a href="?page=1">&laquo; 首页</a>
                 <a href="?page={{ users.previous_page_number }}">上一页</a>
             {% endif %}
-
             <span class="current">
-                Page {{ users.number }} of {{ users.paginator.num_pages }}.
+                第 {{ users.number }} 页，共 {{ users.paginator.num_pages }} 页
             </span>
-
             {% if users.has_next %}
                 <a href="?page={{ users.next_page_number }}">下一页</a>
                 <a href="?page={{ users.paginator.num_pages }}">尾页 &raquo;</a>
