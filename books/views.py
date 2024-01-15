@@ -52,7 +52,7 @@ def home(request):
 @login_required
 def profile_view(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    profile = user.userprofile
+    profile = request.user.userprofile
     # 检查当前登录用户是否有权查看这个页面
     if request.user != user and not profile.membership_type:
         return HttpResponseForbidden("您没有权限查看这个页面")

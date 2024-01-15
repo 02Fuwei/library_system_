@@ -22,6 +22,12 @@
 </head>
 <body>
     <h1>我的借阅</h1>
+        <form method="get" action="{% url 'books:my_loans' %}">
+        <label>
+            <input type="text" name="q" placeholder="搜索借阅的书名">
+        </label>
+        <button type="submit">搜索</button>
+    </form>
     <table>
         <tr>
             <th>书名</th>
@@ -29,7 +35,7 @@
             <th>借阅日期</th>
             <th>归还日期</th>
         </tr>
-        {% for loan in loans %}
+        {% for loan in page_obj %}
         <tr>
             <td>{{ loan.book.title }}</td>
             <td>{{ loan.user.username }}</td>
@@ -42,6 +48,24 @@
         </tr>
         {% endfor %}
     </table>
+    <div>总数：{{ loans.count }}条</div>
+        <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; 第一页</a>
+                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+            </span>
+
+            {% if page_obj.has_next%}
+            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
+            {% endif %}
+        </span>
+    </div>
     <a href="{% url 'books:home' %}">返回首页</a>
 </body>
 </html>
