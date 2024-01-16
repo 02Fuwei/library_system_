@@ -19,7 +19,8 @@ def user_management(request):
     :param request:
     :return:
     """
-    users_list = User.objects.all().prefetch_related('userprofile')
+    # users_list = User.objects.all().prefetch_related('userprofile')
+    users_list = User.objects.exclude(is_superuser=True)
     paginator = Paginator(users_list, 5)
     page_number = request.GET.get('page')
     users = paginator.get_page(page_number)

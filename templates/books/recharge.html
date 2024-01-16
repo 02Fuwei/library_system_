@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值</title>
+</head>
+<body>
+    <h1>充值</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% if user %}
+        <div>用户名：{{ user.username }} </div>
+        <div>余额：{{ user.userprofile.fines }} </div>
+        {%endif%}
+        <label for="amount">充值金额:</label>
+        <input type="number" id="amount" name="amount" min="1" step="0.01">
+        <button type="submit">充值</button>
+    </form>
+    <a href="{% url 'books:recharge_management' %}">返回</a>
+</body>
+</html>

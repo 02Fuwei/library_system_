@@ -50,12 +50,10 @@ def home(request):
 
 
 @login_required
-def profile_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def profile_view(request):
+    # 个人资料
+    user = request.user
     profile = request.user.userprofile
-    # 检查当前登录用户是否有权查看这个页面
-    if request.user != user and not profile.membership_type:
-        return HttpResponseForbidden("您没有权限查看这个页面")
     if request.method == 'POST':
         user_form = UserProfileForm(request.POST, instance=profile)
         if user_form.is_valid():
@@ -64,7 +62,13 @@ def profile_view(request, user_id):
             user.email = user_form.cleaned_data['email']
             user.save()
             user_form.save()
-            return redirect('books:home')
+            context = {
+                'user': user,
+                'profile': profile,
+                'form': user_form,
+            }
+            return render(request, 'books/profile.html', context)
+
     else:
         user_form = UserProfileForm(instance=profile, initial={
             'first_name': user.first_name,
@@ -77,6 +81,16 @@ def profile_view(request, user_id):
         'form': user_form,
     }
     return render(request, 'books/profile.html', context)
+
+
+def user_profile(request, user_id):
+    # 用户详情
+
+    user = get_object_or_404(User, pk=user_id)
+    profile = user.userprofile
+    if request.user != user and not request.user.userprofile.membership_type:
+        return HttpResponseForbidden("您没有权限查看这个页面")
+    return render(request, 'books/user_profile.html', {'user': user, 'profile': profile})
 
 
 def logout_view(request):

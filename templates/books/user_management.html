@@ -40,9 +40,9 @@
             <td>{{ user.email|default:"-" }}</td>
             <td>{{ user.userprofile.phone_number|default:"-" }}</td>
             <td>{{ user.userprofile.membership_expiry|default:"-" }}</td>
-            <td>{{ user.userprofile.fines|default:"-" }}</td>
+            <td>{{ user.userprofile.fines|default:"0.00" }}</td>
             <td>{% if user.is_active %}激活{% else %}未激活{% endif %}</td>
-            <td><a href="{% url 'books:profile' user.id %}">详情</a></td>
+            <td><a href="{% url 'books:user_profile' user.id %}">详情</a></td>
         </tr>
         {% empty %}
         <tr>

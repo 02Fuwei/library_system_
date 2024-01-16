@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值管理</title>
+</head>
+<body>
+    <h1>用户管理</h1>
+    <table>
+        <tr>
+            <th>用户名</th>
+            <th>余额</th>
+            <th>操作</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.userprofile.fines }}</td>
+            <td>
+                <a href="{% url 'books:recharge' user.id %}">充值</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'books:home' %}">返回</a>
+</body>
+</html>
