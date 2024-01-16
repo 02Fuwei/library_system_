@@ -9,6 +9,7 @@ from .forms import BookForm
 from django.http import HttpResponseForbidden, HttpResponse
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib import messages
 
 
 @login_required
@@ -85,14 +86,18 @@ def borrow_book(request, book_id):
                     Loan.objects.create(book=book, user=request.user)  # 创建借书记录
                     book.in_stock -= 1  # 更新库存
                     book.save()
-                    return render(request, 'books/book_detail.html', {'book': book, 'messages': '借书成功'})
+                    messages.success(request, '借书成功')
+                    return render(request, 'books/book_detail.html', {'book': book})
                 else:
-                    return render(request, 'books/book_detail.html', {'book': book, 'messages': '该书已借'})
+                    messages.error(request, '该书已借')
+                    return render(request, 'books/book_detail.html', {'book': book})
             else:
                 # 借书总数>限额
-                return render(request, 'books/book_detail.html', {'book': book, 'messages': '您已达到借书限额'})
+                messages.error(request, '您已达到借书限额')
+                return render(request, 'books/book_detail.html', {'book': book})
         else:
-            return render(request, 'books/book_detail.html', {'book': book, 'messages': '该书库存不足'})
+            messages.error(request, '该书库存不足')
+            return render(request, 'books/book_detail.html', {'book': book})
     return render(request, 'books/book_detail.html', {'book': book})
 
 
@@ -103,10 +108,12 @@ def return_book(request, book_id):
         # 匹配book_id和user
         loan = Loan.objects.get(book_id=book_id, user=request.user, return_date__isnull=True)
     except Loan.DoesNotExist:
-        return render(request, 'books/book_detail.html', {'book': book, 'messages': '您未该借书或已还书'})
+        messages.error(request, '您未该借书或已还书')
+        return render(request, 'books/book_detail.html', {'book': book})
     if request.method == 'POST':
         loan.return_date = timezone.now().date()
         book.in_stock += 1
         book.save()
         loan.save()
-    return render(request, 'books/book_detail.html', {'book': book, 'messages': '还书成功'})
+        messages.success(request, '还书成功')
+    return render(request, 'books/book_detail.html', {'book': book})

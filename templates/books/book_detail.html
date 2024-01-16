@@ -12,8 +12,11 @@
         <button type="submit">借书</button>
     </form>
     {% if messages %}
-        <div>{{ messages }}</div>
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
     {% endif %}
+
     <form action="{% url 'books:return_book' book.id %}" method="post">
         {% csrf_token %}
         <button type="submit">还书</button>
