@@ -22,6 +22,12 @@
 </head>
 <body>
     <h1>用户管理</h1>
+        <form method="get" action="{% url 'books:user_management' %}">
+        <label>
+            <input type="text" name="q" placeholder="搜索用户名">
+        </label>
+        <button type="submit">搜索</button>
+    </form>
     <table>
         <tr>
             <th>用户名</th>

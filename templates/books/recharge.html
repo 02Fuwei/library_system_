@@ -3,19 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <title>充值</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>充值</h1>
-    <form method="post">
-        {% csrf_token %}
-        {% if user %}
-        <div>用户名：{{ user.username }} </div>
-        <div>余额：{{ user.userprofile.fines }} </div>
-        {%endif%}
-        <label for="amount">充值金额:</label>
-        <input type="number" id="amount" name="amount" min="1" step="0.01">
-        <button type="submit">充值</button>
-    </form>
-    <a href="{% url 'books:recharge_management' %}">返回</a>
+    <div class="container">
+        <h1>充值</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% if user %}
+            <div>用户名：{{ user.username }}</div>
+            <div>余额：{{ user.userprofile.fines }}</div>
+            {% endif %}
+            <label for="amount">充值金额:</label>
+            <input type="number" id="amount" name="amount" min="1" step="0.01">
+            <button type="submit">充值</button>
+        </form>
+        <a href="{% url 'books:recharge_management' %}">返回</a>
+    </div>
 </body>
 </html>

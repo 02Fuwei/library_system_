@@ -16,7 +16,7 @@ def my_loans(request):
     query = request.GET.get('q')
     if query:
         loans = loans.filter(Q(book__title__icontains=query))
-    paginator = Paginator(loans, 5)
+    paginator = Paginator(loans, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'books/my_loans.html', {'loans': loans, 'page_obj': page_obj})

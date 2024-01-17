@@ -19,7 +19,7 @@ def book_list(request):
     books = Book.objects.all()
     if query:
         books = books.filter(Q(title__icontains=query))  # 搜索匹配书名的图书
-    paginator = Paginator(books, 5)  # 分页
+    paginator = Paginator(books, 10)  # 分页
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'books/book_list.html', {'page_obj': page_obj, 'books': books})
