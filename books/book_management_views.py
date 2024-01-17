@@ -10,6 +10,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.db.models import Q
 from django.utils import timezone
 from django.contrib import messages
+from datetime import datetime
 
 
 @login_required
@@ -74,30 +75,36 @@ def borrow_book(request, book_id):
     # 借书
     book = get_object_or_404(Book, pk=book_id)
     user_profile = request.user.userprofile
-    if request.method == 'POST':
-        if book.in_stock > 0:
-            # 库存大于等于0
-            # 已借书总数
-            books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()
-            if books_borrowed_count < user_profile.loan_limit:
-                # 借书总数<=限额
-                if not Loan.objects.filter(book_id=book_id, user=request.user, return_date__isnull=True).exists():
-                    # 该书未借
-                    Loan.objects.create(book=book, user=request.user)  # 创建借书记录
-                    book.in_stock -= 1  # 更新库存
-                    book.save()
-                    messages.success(request, '借书成功')
-                    return render(request, 'books/book_detail.html', {'book': book})
+    basic_fee = 1  # 基础费用
+    if user_profile.fines >= basic_fee:
+        user_profile.fines -= basic_fee
+        user_profile.save()
+        if request.method == 'POST':
+            if book.in_stock > 0:
+                # 库存大于等于0
+                # 已借书总数
+                books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()
+                if books_borrowed_count < user_profile.loan_limit:
+                    # 借书总数<=限额
+                    if not Loan.objects.filter(book_id=book_id, user=request.user, return_date__isnull=True).exists():
+                        # 该书未借
+                        Loan.objects.create(book=book, user=request.user, loan_date=datetime.now())  # 创建借书记录
+                        book.in_stock -= 1  # 更新库存
+                        book.save()
+                        messages.success(request, '借书成功')
+                        return render(request, 'books/book_detail.html', {'book': book})
+                    else:
+                        messages.error(request, '该书已借')
+                        return render(request, 'books/book_detail.html', {'book': book})
                 else:
-                    messages.error(request, '该书已借')
+                    # 借书总数>限额
+                    messages.error(request, '您已达到借书限额')
                     return render(request, 'books/book_detail.html', {'book': book})
             else:
-                # 借书总数>限额
-                messages.error(request, '您已达到借书限额')
+                messages.error(request, '该书库存不足')
                 return render(request, 'books/book_detail.html', {'book': book})
-        else:
-            messages.error(request, '该书库存不足')
-            return render(request, 'books/book_detail.html', {'book': book})
+    else:
+        messages.error(request, '余额不足，请充值后再借书')
     return render(request, 'books/book_detail.html', {'book': book})
 
 
