@@ -4,12 +4,25 @@
     <meta charset="UTF-8">
     <title>用户管理</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            background: #fff;
+            margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
         th, td {
             padding: 8px;
@@ -18,61 +31,94 @@
         th {
             background-color: #f2f2f2;
         }
+        form {
+            padding-top: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>用户管理</h1>
+    <div class="container">
+        <h1>用户管理</h1>
         <form method="get" action="{% url 'books:user_management' %}">
-        <label>
-            <input type="text" name="q" placeholder="搜索用户名">
-        </label>
-        <button type="submit">搜索</button>
-    </form>
-    <table>
-        <tr>
-            <th>用户名</th>
-            <th>昵称</th>
-            <th>电子邮箱</th>
-            <th>手机号</th>
-            <th>过期时间</th>
-            <th>余额</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.username|default:"-" }}</td>
-            <td>{{ user.last_name|default:"-" }}</td>
-            <td>{{ user.email|default:"-" }}</td>
-            <td>{{ user.userprofile.phone_number|default:"-" }}</td>
-            <td>{{ user.userprofile.membership_expiry|default:"-" }}</td>
-            <td>{{ user.userprofile.fines|default:"0.00" }}</td>
-            <td>{% if user.is_active %}激活{% else %}未激活{% endif %}</td>
-            <td><a href="{% url 'books:user_profile' user.id %}">详情</a></td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="8">没有用户记录。</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <!-- 分页控件 -->
-    <div class="pagination">
-        <span class="step-links">
-            {% if users.has_previous %}
-                <a href="?page=1">&laquo; 首页</a>
-                <a href="?page={{ users.previous_page_number }}">上一页</a>
-            {% endif %}
-            <span class="current">
-                第 {{ users.number }} 页，共 {{ users.paginator.num_pages }} 页
+            <label>
+                <input type="text" name="q" placeholder="搜索用户名">
+            </label>
+            <button type="submit">搜索</button>
+        </form>
+        <table>
+            <tr>
+                <th>用户名</th>
+                <th>昵称</th>
+                <th>电子邮箱</th>
+                <th>手机号</th>
+                <th>过期时间</th>
+                <th>余额</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username|default:"-" }}</td>
+                <td>{{ user.last_name|default:"-" }}</td>
+                <td>{{ user.email|default:"-" }}</td>
+                <td>{{ user.userprofile.phone_number|default:"-" }}</td>
+                <td>{{ user.userprofile.membership_expiry|default:"-" }}</td>
+                <td>{{ user.userprofile.fines|default:"0.00" }}</td>
+                <td>{% if user.is_active %}激活{% else %}未激活{% endif %}</td>
+                <td><a href="{% url 'books:user_profile' user.id %}">详情</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">没有用户记录。</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>总数：{{ users.count}}条</div>
+        <!-- 分页控件 -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 首页</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                {% endif %}
+                <span class="current">
+                    第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+                {% endif %}
             </span>
-            {% if users.has_next %}
-                <a href="?page={{ users.next_page_number }}">下一页</a>
-                <a href="?page={{ users.paginator.num_pages }}">尾页 &raquo;</a>
-            {% endif %}
-        </span>
-    </div><br>
-    <a href="{% url 'books:home' %}">返回首页</a>
+        </div><br>
+        <div class="footer">
+            <a href="{% url 'books:home' %}">返回首页</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -4,12 +4,25 @@
     <meta charset="UTF-8">
     <title>我的借阅</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            background: #fff;
+            margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
         th, td {
             padding: 8px;
@@ -18,54 +31,87 @@
         th {
             background-color: #f2f2f2;
         }
+        form {
+            padding-top: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>我的借阅</h1>
+    <div class="container">
+        <h1>我的借阅</h1>
         <form method="get" action="{% url 'books:my_loans' %}">
-        <label>
-            <input type="text" name="q" placeholder="搜索借阅的书名">
-        </label>
-        <button type="submit">搜索</button>
-    </form>
-    <table>
-        <tr>
-            <th>书名</th>
-            <th>借阅者</th>
-            <th>借阅日期</th>
-            <th>归还日期</th>
-        </tr>
-        {% for loan in page_obj %}
-        <tr>
-            <td>{{ loan.book.title }}</td>
-            <td>{{ loan.user.username }}</td>
-            <td>{{ loan.loan_date }}</td>
-            <td>{{ loan.return_date|default:"未归还" }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">没有借阅记录。</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div>总数：{{ loans.count }}条</div>
+            <label>
+                <input type="text" name="q" placeholder="搜索借阅的书名">
+            </label>
+            <button type="submit">搜索</button>
+        </form>
+        <table>
+            <tr>
+                <th>书名</th>
+                <th>借阅者</th>
+                <th>借阅日期</th>
+                <th>归还日期</th>
+            </tr>
+            {% for loan in page_obj %}
+            <tr>
+                <td>{{ loan.book.title }}</td>
+                <td>{{ loan.user.username }}</td>
+                <td>{{ loan.loan_date }}</td>
+                <td>{{ loan.return_date|default:"未归还" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">没有借阅记录。</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>总数：{{ loans.count }}条</div>
         <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; 第一页</a>
-                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
-            {% endif %}
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 第一页</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                {% endif %}
 
-            <span class="current">
-                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                <span class="current">
+                    第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
+                {% endif %}
             </span>
-
-            {% if page_obj.has_next%}
-            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
-            {% endif %}
-        </span>
+        </div>
+        <div class="footer">
+            <a href="{% url 'books:home' %}">返回首页</a>
+        </div>
     </div>
-    <a href="{% url 'books:home' %}">返回首页</a>
 </body>
 </html>

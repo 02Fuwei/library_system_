@@ -103,6 +103,7 @@ def logout_view(request):
 def change_password(request):
     """
     修改密码
+    todo：html没有提示
     """
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)

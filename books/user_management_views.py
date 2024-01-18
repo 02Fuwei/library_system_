@@ -20,11 +20,11 @@ def user_management(request):
     :return:
     """
     # users_list = User.objects.all().prefetch_related('userprofile')
-    users_list = User.objects.exclude(is_superuser=True)
+    users = User.objects.exclude(is_superuser=True)
     query = request.GET.get('q')
     if query:
-        users_list = users_list.filter(Q(username__contains=query))
-    paginator = Paginator(users_list, 10)
+        users = users.filter(Q(username__contains=query))
+    paginator = Paginator(users, 10)
     page_number = request.GET.get('page')
-    users = paginator.get_page(page_number)
-    return render(request, 'books/user_management.html', {'users': users})
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'books/user_management.html', {'users': users, 'page_obj': page_obj})

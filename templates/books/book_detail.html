@@ -3,33 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ book.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            overflow: hidden;
+            background: #fff;
+            padding: 20px;
+            margin: 20px auto auto;
+            border-radius: 8px;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button, input[type="submit"] {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover, input[type="submit"]:hover {
+            background-color: #003d82;
+        }
+        p {
+            margin-top: 10px;
+        }
+        .messages {
+            color: red;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ book.title }}</h1>
-    <a href="{% url 'books:book_edit' book.id %}">编辑</a>
-    <form action="{% url 'books:borrow_book' book.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">借书</button>
-    </form>
-    {% if messages %}
-        {% for message in messages %}
-            <div>{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+    <div class="container">
+        <h1>{{ book.title }}</h1>
+        <form action="{% url 'books:borrow_book' book.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">借书</button>
+        </form>
+        <form action="{% url 'books:return_book' book.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">还书</button>
+        </form>
 
-    <form action="{% url 'books:return_book' book.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">还书</button>
-    </form>
-    <p>作者: {{ book.author }}</p>
-    <p>ISBN: {{ book.isbn }}</p>
-    <p>出版日期: {{ book.publication_date }}</p>
-    <p>类别: {{ book.category }}</p>
-    <p>库存数量: {{ book.in_stock }}</p>
-    <form action="{% url 'books:book_delete' book.id %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="删除图书">
-    </form>
-    <a href="{% url 'books:book_list' %}">返回</a>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <p>作者: {{ book.author }}</p>
+        <p>ISBN: {{ book.isbn }}</p>
+        <p>出版日期: {{ book.publication_date }}</p>
+        <p>类别: {{ book.category }}</p>
+        <p>库存数量: {{ book.in_stock }}</p>
+        <a href="{% url 'books:book_edit' book.id %}">编辑</a>
+        <form action="{% url 'books:book_delete' book.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="submit" value="删除图书">
+        </form>
+        <div class="footer">
+            <a href="{% url 'books:book_list' %}">返回</a>
+        </div>
+    </div>
 </body>
 </html>

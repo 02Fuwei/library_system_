@@ -3,23 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>用户资料</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        p {
+            margin-top: 10px;
+            color: #333;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>用户资料</h1>
-    <form method="post">
-    {% csrf_token %}
-    <p>用户名: {{ user.username }}</p>
-    <p>名字: {{ user.first_name|default:"-"  }}</p>
-    <p>姓名: {{ user.last_name|default:"-"  }}</p>
-    <p>电子邮件: {{ user.email|default:"-"  }}</p>
-    <p>地址: {{ profile.address|default:"-"  }}</p>
-    <p>电话号码: {{ profile.phone_number|default:"-"  }}</p>
-        <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
-    <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
-    <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
-    <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
-    <p>余额: {{ profile.fines|default:"0.00"  }}</p>
-</form>
-    <a href="{% url 'books:user_management' %}">返回</a>
+    <div class="container">
+        <h1>用户资料</h1>
+        <form method="post">
+            {% csrf_token %}
+            <p>用户名: {{ user.username }}</p>
+            <p>名字: {{ user.first_name|default:"-"  }}</p>
+            <p>姓名: {{ user.last_name|default:"-"  }}</p>
+            <p>电子邮件: {{ user.email|default:"-"  }}</p>
+            <p>地址: {{ profile.address|default:"-"  }}</p>
+            <p>电话号码: {{ profile.phone_number|default:"-"  }}</p>
+            <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
+            <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
+            <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
+            <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
+            <p>余额: {{ profile.fines|default:"0.00"  }}</p>
+        </form>
+        <div class="footer">
+            <a href="{% url 'books:user_management' %}">返回</a>
+        </div>
+    </div>
 </body>
 </html>

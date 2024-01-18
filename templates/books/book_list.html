@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <title>图书列表</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
         th, td {
             padding: 8px;
@@ -18,60 +40,96 @@
         th {
             background-color: #f2f2f2;
         }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>图书列表</h1>
-    <a href="{% url 'books:add_book' %}">新增图书</a>
-    <form method="get" action="{% url 'books:book_list' %}">
-        <label>
-            <input type="text" name="q" placeholder="搜索书名...">
-        </label>
-        <button type="submit">搜索</button>
-    </form>
-    <table>
-        <tr>
-            <th>名称</th>
-            <th>作者</th>
-            <th>ISBN</th>
-            <th>出版日期</th>
-            <th>类别</th>
-            <th>库存数量</th>
-        </tr>
-        {% for book in page_obj %}
-        <tr>
-            <td><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.isbn }}</td>
-            <td>{{ book.publication_date }}</td>
-            <td>{{ book.category }}</td>
-            <td>{{ book.in_stock }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">没有可用的图书。</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <h1>图书列表</h1>
+        <div class="action-bar">
+            <form method="get" action="{% url 'books:book_list' %}">
+                <label>
+                    <input type="text" name="q" placeholder="搜索书名...">
+                </label>
+                <button type="submit">搜索</button>
+            </form>
+            <a href="{% url 'books:add_book' %}">新增图书</a>
+        </div>
+        <table>
+            <tr>
+                <th>名称</th>
+                <th>作者</th>
+                <th>ISBN</th>
+                <th>出版日期</th>
+                <th>类别</th>
+                <th>库存数量</th>
+            </tr>
+            {% for book in page_obj %}
+            <tr>
+                <td><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.publication_date }}</td>
+                <td>{{ book.category }}</td>
+                <td>{{ book.in_stock }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">没有可用的图书。</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>总数：{{ books.count}}条</div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 第一页</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                {% endif %}
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; 第一页</a>
-                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
-            {% endif %}
+                <span class="current">
+                    第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                </span>
 
-            <span class="current">
-                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
+                {% endif %}
             </span>
-
-            {% if page_obj.has_next%}
-            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 »</a>
-            {% endif %}
-        </span>
+        </div>
+        <div class="footer">
+            <a href="{% url 'books:home' %}">返回首页</a>
+        </div>
     </div>
-<a href="{% url 'books:home' %}">返回首页</a>
-
 </body>
 </html>

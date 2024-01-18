@@ -62,6 +62,9 @@
         a:hover {
             text-decoration: underline;
         }
+        .messages {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -78,9 +81,11 @@
             <button type="submit">充值</button>
         </form>
         {% if messages %}
+            <div class="messages">
             {% for message in messages %}
                 <div>{{ message }}</div>
             {% endfor %}
+            </div>
         {% endif %}
         <a href="{% url 'books:recharge_management' %}">返回</a>
     </div>

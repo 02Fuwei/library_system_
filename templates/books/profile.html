@@ -3,40 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <title>个人资料</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>个人资料</h1>
-    <form method="post">
-    {% csrf_token %}
-    <p>用户名: {{ user.username }}</p>
-        <div>
-        <label for="{{ form.first_name.id_for_label }}">名字:</label>
-        {{ form.first_name }}
+    <div class="container">
+        <h1>个人资料</h1>
+        <form method="post">
+            {% csrf_token %}
+            <p>用户名: {{ user.username }}</p>
+            <div>
+                <label for="{{ form.first_name.id_for_label }}">名字:</label>
+                {{ form.first_name }}
+            </div>
+            <div>
+                <label for="{{ form.last_name.id_for_label }}">姓氏:</label>
+                {{ form.last_name }}
+            </div>
+            <div>
+                <label for="{{ form.email.id_for_label }}">电子邮件:</label>
+                {{ form.email }}
+            </div>
+            <div>
+                <label for="{{ form.address.id_for_label }}">地址:</label>
+                {{ form.address }}
+            </div>
+            <div>
+                <label for="{{ form.phone_number.id_for_label }}">电话号码:</label>
+                {{ form.phone_number }}
+            </div>
+            <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
+            <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
+            <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
+            <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
+            <p>余额: {{ profile.fines|default:"0.00"  }}</p>
+            <button type="submit">保存更改</button>
+        </form>
+        <div class="footer">
+            <a href="{% url 'books:home' %}">返回</a>
+        </div>
     </div>
-    <div>
-        <label for="{{ form.last_name.id_for_label }}">姓氏:</label>
-        {{ form.last_name }}
-
-    </div>
-    <div>
-        <label for="{{ form.email.id_for_label }}">电子邮件:</label>
-        {{ form.email }}
-    </div>
-    <div>
-        <label for="{{ form.address.id_for_label }}">地址:</label>
-        {{ form.address }}
-    </div>
-    <div>
-        <label for="{{ form.phone_number.id_for_label }}">电话号码:</label>
-        {{ form.phone_number }}
-    </div>
-        <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
-    <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
-    <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
-    <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
-    <p>余额: {{ profile.fines|default:"0.00"  }}</p>
-    <button type="submit">保存更改</button>
-</form>
-    <a href="{% url 'books:home' %}">返回</a>
 </body>
 </html>
