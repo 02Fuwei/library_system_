@@ -34,7 +34,7 @@
     <p>创建时间: {{ user.date_joined|default:"-"  }}</p>
     <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
     <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
-    <p>余额: {{ profile.fines|default:"-"  }}</p>
+    <p>余额: {{ profile.fines|default:"0.00"  }}</p>
     <button type="submit">保存更改</button>
 </form>
     <a href="{% url 'books:home' %}">返回</a>

@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 15px;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>首页</h1>
-    <h1>欢迎来到图书馆信息管理系统</h1>
-    <p>您好,{{ user.username }}!</p>
-    <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
+    <div class="container">
+        <h1>欢迎来到图书馆信息管理系统</h1>
+        <p>您好, {{ user.username }}!</p>
+        <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
 
-        <a href="{% url 'books:profile' %}">个人资料</a>
-
-        <a href="{% url 'books:change_password' %}">修改密码</a>
-        <a href="{% url 'books:my_loans' %}">我的借阅</a>
-
-        <a href="{% url 'books:logout_view' %}">登出</a><br>
-
-    <!-- 只有管理员才能看到用户管理链接 -->
-    {% if profile.membership_type == 1 %}
-        <a href="{% url 'books:user_management' %}">用户管理</a><br>
-        <a href="{% url 'books:book_list' %}">图书管理</a><br>
-        <a href="{% url 'books:loans_management' %}">借阅管理</a><br>
-        <a href="{% url 'books:recharge_management' %}">充值管理</a><br>
-    {% endif %}
-    <!-- 其他内容 -->
+        <div class="nav-links">
+            <a href="{% url 'books:profile' %}">个人资料</a>
+            <a href="{% url 'books:change_password' %}">修改密码</a>
+            <a href="{% url 'books:my_loans' %}">我的借阅</a>
+            <a href="{% url 'books:logout_view' %}">登出</a><br>
+            {% if profile.membership_type == 1 %}
+                <a href="{% url 'books:user_management' %}">用户管理</a><br>
+                <a href="{% url 'books:book_list' %}">图书管理</a><br>
+                <a href="{% url 'books:loans_management' %}">借阅管理</a><br>
+                <a href="{% url 'books:recharge_management' %}">充值管理</a><br>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

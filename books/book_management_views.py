@@ -76,25 +76,24 @@ def borrow_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     user_profile = request.user.userprofile
     basic_fee = 1  # 基础费用
-    if user_profile.fines >= basic_fee:
-        user_profile.fines -= basic_fee
-        user_profile.save()
-        if request.method == 'POST':
+    if request.method == 'POST':
+        if user_profile.fines >= basic_fee:
             if book.in_stock > 0:
                 # 库存大于等于0
-                # 已借书总数
-                books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()
+                books_borrowed_count = Loan.objects.filter(user=request.user, return_date__isnull=True).count()  # 已借书总数
                 if books_borrowed_count < user_profile.loan_limit:
                     # 借书总数<=限额
                     if not Loan.objects.filter(book_id=book_id, user=request.user, return_date__isnull=True).exists():
                         # 该书未借
+                        user_profile.fines -= basic_fee
+                        user_profile.save()
                         Loan.objects.create(book=book, user=request.user, loan_date=datetime.now())  # 创建借书记录
                         book.in_stock -= 1  # 更新库存
                         book.save()
                         messages.success(request, '借书成功')
                         return render(request, 'books/book_detail.html', {'book': book})
                     else:
-                        messages.error(request, '该书已借')
+                        messages.error(request, '该书已借,请勿重复借阅')
                         return render(request, 'books/book_detail.html', {'book': book})
                 else:
                     # 借书总数>限额
@@ -103,24 +102,34 @@ def borrow_book(request, book_id):
             else:
                 messages.error(request, '该书库存不足')
                 return render(request, 'books/book_detail.html', {'book': book})
-    else:
-        messages.error(request, '余额不足，请充值后再借书')
+        else:
+            messages.error(request, '余额不足，当前余额：', user_profile.fines)
     return render(request, 'books/book_detail.html', {'book': book})
 
 
 def return_book(request, book_id):
     # 还书
+    daily_fee = 1  # 每天费用
     book = get_object_or_404(Book, pk=book_id)
     try:
         # 匹配book_id和user
         loan = Loan.objects.get(book_id=book_id, user=request.user, return_date__isnull=True)
+        user_profile = loan.user.userprofile
+        loan_days = (datetime.now().date() - loan.loan_date).days  # 借书天数
+        total_fee = daily_fee * loan_days  # 借书金额
     except Loan.DoesNotExist:
         messages.error(request, '您未该借书或已还书')
         return render(request, 'books/book_detail.html', {'book': book})
+
     if request.method == 'POST':
-        loan.return_date = timezone.now().date()
-        book.in_stock += 1
-        book.save()
-        loan.save()
-        messages.success(request, '还书成功')
+        if user_profile.fines >= total_fee:
+            user_profile.fines -= total_fee
+            user_profile.save()
+            loan.return_date = timezone.now().date()
+            book.in_stock += 1
+            book.save()
+            loan.save()
+            messages.success(request, '还书成功')
+        else:
+            messages.error(request, '余额不足，请先进行充值')
     return render(request, 'books/book_detail.html', {'book': book})

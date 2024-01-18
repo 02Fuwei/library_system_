@@ -20,7 +20,7 @@ class UserRegistrationForm(forms.ModelForm):
     """
     password = forms.CharField(label='密码', widget=forms.PasswordInput)
     password2 = forms.CharField(label='确认密码', widget=forms.PasswordInput)
-    phone_number = forms.CharField(label='手机号码', max_length=11)
+    # phone_number = forms.CharField(label='手机号码', max_length=11)
     USER_TYPE_CHOICES = {
         (0, '用户'),
         (1, '管理员'),
@@ -44,7 +44,7 @@ class UserRegistrationForm(forms.ModelForm):
             user.save()
             library_id = generate_library_id()
             user_type = self.cleaned_data['user_type']
-            UserProfile.objects.create(user=user, phone_number=self.cleaned_data['phone_number'], library_id=library_id,
+            UserProfile.objects.create(user=user, library_id=library_id,
                                        membership_type=user_type)
         return user
 

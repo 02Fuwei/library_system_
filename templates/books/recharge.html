@@ -77,6 +77,11 @@
             <input type="number" id="amount" name="amount" min="1" step="0.01">
             <button type="submit">充值</button>
         </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
         <a href="{% url 'books:recharge_management' %}">返回</a>
     </div>
 </body>
