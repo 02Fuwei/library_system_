@@ -67,6 +67,7 @@ def profile_view(request):
                 'profile': profile,
                 'form': user_form,
             }
+            messages.success(request, '保存成功')
             return render(request, 'books/profile.html', context)
 
     else:
@@ -111,8 +112,6 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # 用于在用户更改密码后更新其会话，以防止用户被登出。
             return redirect('books:home')
-        # else:
-        #     messages.error(request, '请修改以下错误')
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'books/change_password.html', {'form': form})

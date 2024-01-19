@@ -51,6 +51,9 @@
             margin-top: 20px;
             text-align: center;
         }
+        .messages {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -84,6 +87,13 @@
             <p>到期日期: {{ profile.membership_expiry|default:"-"  }}</p>
             <p>借书限额: {{ profile.loan_limit|default:"-"  }}</p>
             <p>余额: {{ profile.fines|default:"0.00"  }}</p>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <button type="submit">保存更改</button>
         </form>
         <div class="footer">

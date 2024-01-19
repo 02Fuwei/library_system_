@@ -3,6 +3,7 @@ from . import views, user_management_views, book_management_views, loans_managem
 
 app_name = 'books'
 urlpatterns = [
+    path('', views.login_view, name='login'),
     path('register/', views.register, name='register'),  # 注册
     path('login/', views.login_view, name='login'),  # 登录
     path('home/', views.home, name='home'),  # 主页
