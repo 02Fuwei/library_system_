@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -127,4 +127,10 @@ DEFAULT_CHARSET = 'utf-8'
 LOGIN_URL = 'books:login'
 
 # Set session to expire after 30 minutes of inactivity
-SESSION_COOKIE_AGE = 1800  # 30 minutes in seconds
+SESSION_COOKIE_AGE = 3600  # 30 minutes in seconds
+
+# 媒体文件的文件系统路径
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 媒体文件的URL前缀
+MEDIA_URL = '/media/'

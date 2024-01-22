@@ -54,7 +54,6 @@
 </head>
 <body>
     <div class="container">
-        <h1>{{ book.title }}</h1>
         <form action="{% url 'books:borrow_book' book.id %}" method="post" style="display: inline;">
             {% csrf_token %}
             <button type="submit">借书</button>
@@ -63,7 +62,6 @@
             {% csrf_token %}
             <button type="submit">还书</button>
         </form>
-
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -71,7 +69,13 @@
                 {% endfor %}
             </div>
         {% endif %}
-
+        <h1>{{ book.title }}</h1>
+        <!-- 显示封面图片，如果有的话 -->
+        {% if book.cover %}
+            <img src="{{ book.cover.url }}" alt="封面图片">
+        {% endif %}
+        <!-- 显示书籍简介 -->
+        <p>简介：{{ book.synopsis|default:"-"  }}</p>
         <p>作者: {{ book.author }}</p>
         <p>ISBN: {{ book.isbn }}</p>
         <p>出版日期: {{ book.publication_date }}</p>

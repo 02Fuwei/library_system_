@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import UserProfile, Book
 import uuid
 from django.contrib.auth.forms import PasswordChangeForm
+from PIL import Image
 
 
 def generate_library_id():
@@ -76,4 +77,18 @@ class BookForm(forms.ModelForm):
     # 添加图书
     class Meta:
         model = Book
-        fields = ['title', 'author', 'isbn', 'publication_date', 'category', 'in_stock']
+        fields = ['title', 'cover', 'synopsis', 'author', 'isbn', 'publication_date', 'category', 'in_stock']
+
+    def clean_cover(self):
+        cover = self.cleaned_data.get('cover')
+        if cover:
+            # 使用PIL库来检查图片尺寸
+            img = Image.open(cover)
+            if img.width != 920 or img.height != 1379:
+                raise ValidationError('图片尺寸必须是70x70像素。')
+
+            # 检查图片格式
+            if not cover.name.endswith('.jpg'):
+                raise ValidationError('只接受jpg格式的图片')
+
+        return cover

@@ -29,7 +29,7 @@ def book_list(request):
 def add_book(request):
     # 添加图书
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('books:book_list')
@@ -49,7 +49,7 @@ def book_edit(request, book_id):
     # 图书编辑
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)
+        form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
             return redirect('books:book_detail', book_id=book.id)

@@ -32,6 +32,8 @@ class Book(models.Model):
     publication_date = models.DateField(verbose_name='出版日期')
     category = models.CharField(max_length=100, verbose_name='类别')
     in_stock = models.IntegerField(default=0, verbose_name='库存数量')
+    cover = models.ImageField(upload_to='book_covers', blank=True, null=True, verbose_name='封面')
+    synopsis = models.TextField(blank=True, null=True, verbose_name='简介')
 
     def __str__(self):
         return self.title
