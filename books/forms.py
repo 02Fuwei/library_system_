@@ -84,11 +84,11 @@ class BookForm(forms.ModelForm):
         if cover:
             # 使用PIL库来检查图片尺寸
             img = Image.open(cover)
-            if img.width != 920 or img.height != 1379:
-                raise ValidationError('图片尺寸必须是70x70像素。')
+            if not (70 <= img.height <= 1000 and 70 <= img.width <= 1000):
+                raise ValidationError('片尺寸必须在 70x70 到 1000x1000 像素之间。')
 
             # 检查图片格式
-            if not cover.name.endswith('.jpg'):
-                raise ValidationError('只接受jpg格式的图片')
+            if not cover.name.lower().endswith(('.jpg', '.jpeg', 'png')):
+                raise ValidationError('只接受jpg或png格式的图片')
 
         return cover
