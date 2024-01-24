@@ -84,16 +84,6 @@ def profile_view(request):
     return render(request, 'books/profile.html', context)
 
 
-def user_profile(request, user_id):
-    # 用户详情
-
-    user = get_object_or_404(User, pk=user_id)
-    profile = user.userprofile
-    if request.user != user and not request.user.userprofile.membership_type:
-        return HttpResponseForbidden("您没有权限查看这个页面")
-    return render(request, 'books/user_profile.html', {'user': user, 'profile': profile})
-
-
 def logout_view(request):
     #  登出
     logout(request)

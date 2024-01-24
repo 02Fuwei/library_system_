@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>个人资料</title>
+    <title>编辑用户</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,7 +65,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>个人资料</h1>
+        <h1>编辑用户</h1>
         <form method="post">
             {% csrf_token %}
             <p>用户名: {{ user.username }}</p>
@@ -104,7 +104,7 @@
             <button type="submit">保存更改</button>
         </form>
         <div class="footer">
-            <a href="{% url 'books:home' %}">返回</a>
+            <a href="{% url 'books:user_profile' user.id %}">返回</a>
         </div>
     </div>
 </body>
