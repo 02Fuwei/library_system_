@@ -17,7 +17,7 @@ from datetime import datetime
 def book_list(request):
     # 图书列表
     query = request.GET.get('q')  # 获取搜索查询
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('id')
     if query:
         books = books.filter(Q(title__icontains=query))  # 搜索匹配书名的图书
     paginator = Paginator(books, 10)  # 分页

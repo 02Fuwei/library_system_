@@ -12,7 +12,7 @@ from django.db.models import Q
 
 def my_loans(request):
     # 我的借阅
-    loans = Loan.objects.filter(user=request.user)  # 我的订阅
+    loans = Loan.objects.filter(user=request.user).order_by('loan_date')  # 我的订阅
     query = request.GET.get('q')
     if query:
         loans = loans.filter(Q(book__title__icontains=query))
@@ -24,7 +24,7 @@ def my_loans(request):
 
 def loans_management(request):
     # 借阅管理
-    loans = Loan.objects.all()  # 获取所有
+    loans = Loan.objects.all().order_by('loan_date')  # 获取所有
     query = request.GET.get('q')
     if query:
         loans = loans.filter(Q(user__username__icontains=query))

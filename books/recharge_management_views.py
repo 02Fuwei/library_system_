@@ -14,7 +14,7 @@ from decimal import Decimal
 @login_required
 def recharge_management(request):
     # 充值管理
-    users = User.objects.exclude(is_superuser=True)
+    users = User.objects.exclude(is_superuser=True).order_by('id')
     query = request.GET.get('q')  # 搜索
     if query:
         users = users.filter(Q(username__contains=query))

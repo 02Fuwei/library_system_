@@ -22,7 +22,7 @@ def user_management(request):
     :return:
     """
     # users_list = User.objects.all().prefetch_related('userprofile')
-    users = User.objects.exclude(is_superuser=True)
+    users = User.objects.exclude(is_superuser=True).order_by('id')
     query = request.GET.get('q')
     if query:
         users = users.filter(Q(username__contains=query))

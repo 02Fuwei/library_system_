@@ -10,48 +10,84 @@
             padding: 0;
             background-color: #e9ecef;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+        }
+        .logo {
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info a, .user-info div {
+            margin-left: 10px;
+        }
+        .main {
+            flex: 1;
+            display: flex;
             padding: 20px;
+        }
+        .sidebar {
+            width: auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: calc(100% - 40px); /* Adjust based on header/footer height */
+            overflow-y: auto;
+        }
+        .content {
+            flex-grow: 1;
             background-color: white;
+            margin-left: 20px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
         }
-        h1 {
+        a {
             color: #007bff;
-        }
-        .nav-links {
-            margin-bottom: 20px;
-        }
-        .nav-links a {
             text-decoration: none;
-            color: #007bff;
-            margin-right: 15px;
         }
-        .nav-links a:hover {
+        a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>欢迎来到图书馆信息管理系统</h1>
-        <p>您好, {{ user.username }}!</p>
-        <p>账号类型：{% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %}</p>
-
-        <div class="nav-links">
-            <a href="{% url 'books:profile' %}">个人资料</a>
+    <div class="header">
+        <div class="logo">LOGO</div>
+        <div class="user-info">
+            <div>您好，{{ user.username }} ({% if profile.membership_type == 0 %}用户{% else %}管理员{% endif %})</div>
             <a href="{% url 'books:change_password' %}">修改密码</a>
-            <a href="{% url 'books:my_loans' %}">我的借阅</a>
-            <a href="{% url 'books:logout_view' %}">登出</a><br>
+            <a href="{% url 'books:logout_view' %}">登出</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <!-- Sidebar content (navigation links) -->
+            <a href="{% url 'books:profile' %}">个人资料</a><br>
+            <a href="{% url 'books:my_loans' %}">我的借阅</a><br>
             {% if profile.membership_type == 1 %}
                 <a href="{% url 'books:user_management' %}">用户管理</a><br>
                 <a href="{% url 'books:book_list' %}">图书管理</a><br>
                 <a href="{% url 'books:loans_management' %}">借阅管理</a><br>
                 <a href="{% url 'books:recharge_management' %}">充值管理</a><br>
             {% endif %}
+        </div>
+        <div class="content">
+            <!-- Main content -->
+            <h1>欢迎来到图书馆信息管理系统</h1>
+            <!-- The rest of your main content goes here -->
         </div>
     </div>
 </body>
